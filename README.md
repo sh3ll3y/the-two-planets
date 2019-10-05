@@ -21,4 +21,4 @@ __________________________
 How to run the program:
 	Run the the_two_planets.py file in the_two_planets folder
 	Example:
-		python3.6 -B the_two_planets_project/the_two_planets/the_two_planets.py
+		python3.7 -B the_two_planets_project/the_two_planets/the_two_planets.py
