@@ -1,0 +1,11 @@
+machine:
+  python:
+    version: 3.7.3
+
+dependencies:
+  override:
+    - pip install -r requirements.txt
+
+test:
+  override:
+    - nosetests python3.7 -B -m unittest discover -s tests -t .
