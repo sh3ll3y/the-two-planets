@@ -1,11 +1,23 @@
-machine:
-  python:
-    version: 3.7.3
-
-dependencies:
-  override:
-    - pip install -r requirements.txt
-
-test:
-  override:
-    - nosetests python3.7 -B -m unittest discover -s tests -t .
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.3
+    steps:
+      - checkout
+      - run:
+          name: Dependencies
+          command: pip install -r requirements.txt
+  test:
+    docker:
+      - image: circleci/python:3.7.3
+    steps:
+      - checkout
+      - run:
+          command: nosetests tests/
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test
