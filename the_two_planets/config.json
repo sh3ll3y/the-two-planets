@@ -1,0 +1,47 @@
+{
+    "army": {
+        "falicornia": {
+            "horses": {
+                "rank": 4,
+                "base_units": 300
+            },
+            "elephants": {
+                "rank": 3,
+                "base_units": 200
+            },
+            "armoured_tanks": {
+                "rank": 2,
+                "base_units": 40
+            },
+            "sling_guns": {
+                "rank": 1,
+                "base_units": 20
+            }
+        },
+        "lengaburu": {
+            "horses": {
+                "rank": 4,
+                "base_units": 100
+            },
+            "elephants": {
+                "rank": 3,
+                "base_units": 50
+            },
+            "armoured_tanks": {
+                "rank": 2,
+                "base_units": 10
+            },
+            "sling_guns": {
+                "rank": 1,
+                "base_units": 5
+            }
+        }
+    },
+
+    "abbrev": {
+        "horses": "H",
+        "elephants": "E",
+        "armoured_tanks": "AT",
+        "sling_guns": "SG"
+    }
+}
