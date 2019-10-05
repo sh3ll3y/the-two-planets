@@ -8,7 +8,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Dependencies
           command: echo 'export PATH=/home/circleci/.local/bin:$PATH' >> $BASH_ENV
           command: pip3 install --user circleci -r requirements.txt
   test:
