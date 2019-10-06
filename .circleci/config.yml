@@ -17,6 +17,7 @@ jobs:
       - checkout
       - run:
           command: python3.7 -B -m unittest discover -s tests -t .
+          
 workflows:
   version: 2
   build_and_test:
