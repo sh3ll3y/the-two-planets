@@ -43,5 +43,9 @@
         "elephants": "E",
         "armoured_tanks": "AT",
         "sling_guns": "SG"
+    },
+
+    "input_patterns": {
+        "standard_input": "(?P<army_name>[A-Z][a-z]+) attacks with (?P<horses>[0-9]+) H (?P<elephants>[0-9]+) E, (?P<armoured_tanks>[0-9]+) AT, (?P<sling_guns>[0-9]+) SG$"
     }
 }

@@ -58,11 +58,11 @@ def main(input_str):
 
     fal_attack_units = validate_fal_attack_units(
         fal_attack_units)
-
+    print(fal_attack_units)
     leng_army = Army('lengaburu')
     leng_army.prepare_battalions(fal_attack_units)
     output = WarResultOutputter(leng_army)
-    output.print_output()
+    output.print_standard_output()
 
 
 if __name__ == '__main__':

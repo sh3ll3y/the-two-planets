@@ -52,7 +52,7 @@ class WarResultOutputterTest(unittest.TestCase):
         with self.assertRaises(army.InvalidArmyError):
             output = WarResultOutputter(army_obj)
 
-    def test_print_output_method_prints_in_the_expected_format(self):
+    def test_print_standard_output_method_prints_in_the_expected_format(self):
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
                 [('test_battalion_one', 40), ('test_battalion_two', 16)])
@@ -60,7 +60,7 @@ class WarResultOutputterTest(unittest.TestCase):
             self.test_army.prepare_battalions(counter_attack)
             output = WarResultOutputter(self.test_army)
             with patch('sys.stdout', new=StringIO()) as fakeOutput:
-                output.print_output()
+                output.print_standard_output()
                 self.assertEqual(
                     fakeOutput.getvalue().strip(),
                     'Home_army deploys 10 TB1, 5 TB2 and loses')

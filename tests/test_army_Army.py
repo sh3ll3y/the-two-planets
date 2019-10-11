@@ -28,12 +28,12 @@ class ArmyTest(unittest.TestCase):
     """Tests for the Army class."""
 
     def _set_up_test_Army(self):
-        self.army = 'home_army'
-        self.test_army = Army(self.army)
+        self.army_name = 'home_army'
+        self.test_army = Army(self.army_name)
 
     def test_army_class_initiation(self):
         self._set_up_test_Army()
-        self.assertEqual(self.test_army.army, self.army)
+        self.assertEqual(self.test_army.army_name, self.army_name)
         self.assertEqual(self.test_army.battalions, [])
         self.assertIsNone(self.test_army.counter_attack)
 
@@ -151,7 +151,7 @@ class ArmyTest(unittest.TestCase):
             expected_army_name = 'home_army'
             expected_attack_units = OrderedDict(
                 [('test_battalion_one', 10), ('test_battalion_two', 5)])
-            expected_result = 'loses'
+            expected_result = False
             army_name, attack_units, result = self.test_army.calibrate()
             self.assertEqual(army_name, expected_army_name)
             self.assertEqual(attack_units, expected_attack_units)
@@ -166,7 +166,7 @@ class ArmyTest(unittest.TestCase):
             expected_army_name = 'home_army'
             expected_attack_units = OrderedDict(
                 [('test_battalion_one', 10), ('test_battalion_two', 2)])
-            expected_result = 'wins'
+            expected_result = True
             army_name, attack_units, result = self.test_army.calibrate()
             self.assertEqual(army_name, expected_army_name)
             self.assertEqual(attack_units, expected_attack_units)

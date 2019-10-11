@@ -9,13 +9,13 @@ class BattalionTest(unittest.TestCase):
 
     def _set_up_test_battalion(self):
         self.army = 'test_army'
-        self.battalion = 'test_battalion'
+        self.battalion_name = 'test_battalion'
         self.rank = 1
         self.base_units = 1000
         self.required_units = 500
         self.batln = Battalion(
             self.army,
-            self.battalion,
+            self.battalion_name,
             self.rank,
             self.base_units,
             self.required_units)
@@ -23,7 +23,7 @@ class BattalionTest(unittest.TestCase):
     def test_battalion_class_initiation(self):
         self._set_up_test_battalion()
         self.assertEqual(self.batln.army, self.army)
-        self.assertEqual(self.batln.battalion, self.battalion)
+        self.assertEqual(self.batln.battalion_name, self.battalion_name)
         self.assertEqual(self.batln.rank, self.rank)
         self.assertEqual(self.batln.base_units, self.base_units)
         self.assertEqual(self.batln.required_units, self.required_units)
