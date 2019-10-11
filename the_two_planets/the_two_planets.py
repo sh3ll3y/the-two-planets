@@ -25,10 +25,10 @@ class InsufficientUnitsError(ValidationError):
 def validate_input_format(input_str):
     """Validates the format of the input received."""
 
-    input_pattern = (r'Falicornia attacks with (?P<horses>[0-9]+) H, '
-                     r'(?P<elephants>[0-9]+) E, '
-                     r'(?P<armoured_tanks>[0-9]+) AT, '
-                     r'(?P<sling_guns>[0-9]+) SG$')
+    input_pattern = (r'Falicornia attacks with (?P<H>[0-9]+) H, '
+                     r'(?P<E>[0-9]+) E, '
+                     r'(?P<AT>[0-9]+) AT, '
+                     r'(?P<SG>[0-9]+) SG$')
 
     match_obj = re.match(input_pattern, input_str)
     if not match_obj:
@@ -51,7 +51,7 @@ def validate_fal_attack_units(attack_units):
 def main(input_str):
     match_obj = validate_input_format(input_str)
     fal_attack = match_obj.groupdict()
-
+    print(fal_attack)
     fal_attack_units = OrderedDict()
     for order in army_data['army']['falicornia'].keys():
         fal_attack_units[order] = int(fal_attack[order])

@@ -22,8 +22,9 @@ class RequiredUnitsNotIntegerError(BattalionError):
 class Battalion(object):
     """Class that represents a battalion."""
 
-    def __init__(self, army, battalion_name, rank, base_units, required_units):
+    def __init__(self, army, battalion_initials, battalion_name, rank, base_units, required_units):
         self.army = army
+        self.battalion_initials = battalion_initials
         self.battalion_name = battalion_name
         self.rank = rank
         self.base_units = base_units
@@ -151,7 +152,7 @@ class Army(AbstractArmy):
 
         batlns = OrderedDict()
         for bat in self.battalions:
-            batlns[bat.battalion_name] = bat.required_units
+            batlns[bat.battalion_initials] = bat.required_units
         return self.army_name, batlns, result
 
     def prepare_battalions(self, counter_attack):
@@ -163,7 +164,7 @@ class Army(AbstractArmy):
                 required_units = _utils.round_up(
                     counter_attack[batln_name], half_it=True)
                 batln = Battalion(army=self.army_name,
-                                  battalion_name=batln_name,
+                                  battalion_initials=batln_name,
                                   **army_data['army'][self.army_name][batln_name],
                                   required_units=required_units)
                 self.battalions.append(batln)
@@ -198,10 +199,10 @@ class WarResultOutputter(object):
         """Prints the output of war in standard format."""
         army_name, attack_units, result = self.army_obj.calibrate()
         output_pattern = self.__build_standard_output_pattern(len(attack_units))
-        army_name = army_name.capitalize()
+        # army_name = army_name.capitalize()
         inject = []
-        for bat in attack_units:
-            inject.append(attack_units[bat])
-            inject.append(army_data['abbrev'][bat])
+        for batln in attack_units:
+            inject.append(attack_units[batln])
+            inject.append(batln)
         outcome = 'wins' if result else 'loses'
-        print(output_pattern.format(army_name, *inject, outcome))
+        print(output_pattern.format(army_name.capitalize(), *inject, outcome))

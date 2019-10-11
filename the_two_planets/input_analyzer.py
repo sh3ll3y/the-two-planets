@@ -28,13 +28,13 @@ class StandardInput(object):
 class_map = {'standard_input': StandardInput,}
 
 class InputAnalyzer(object):
-    def __init__(self, input_pattern):
+    def __init__(self, input_str):
         self.input_pattern = input_pattern
         self.formatter = None
 
     def validate_input_format(self):
         for class in class_map:
-            if re.match(class_map[class].pattern, self.input_pattern):
+            if re.match(class_map[class].pattern, self.input_str):
                 self.formatter = class_map[class]()
                 return True
         raise InputFormatError(self.input_pattern, "Invalid input format.")

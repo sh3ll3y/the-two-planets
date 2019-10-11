@@ -1,51 +1,53 @@
 {
     "army": {
         "falicornia": {
-            "horses": {
+            "H": {
+                "battalion_name": "horses",
                 "rank": 4,
                 "base_units": 300
             },
-            "elephants": {
+            "E": {
+                "battalion_name": "elephants",
                 "rank": 3,
                 "base_units": 200
             },
-            "armoured_tanks": {
+            "AT": {
+                "battalion_name": "armoured_tanks",
                 "rank": 2,
                 "base_units": 40
             },
-            "sling_guns": {
+            "SG": {
+                "battalion_name": "sling_guns",
                 "rank": 1,
                 "base_units": 20
             }
         },
         "lengaburu": {
-            "horses": {
+            "H": {
+                "battalion_name": "horses",
                 "rank": 4,
                 "base_units": 100
             },
-            "elephants": {
+            "E": {
+                "battalion_name": "elephants",
                 "rank": 3,
                 "base_units": 50
             },
-            "armoured_tanks": {
+            "AT": {
+                "battalion_name": "armoured_tanks",
                 "rank": 2,
                 "base_units": 10
             },
-            "sling_guns": {
+            "SG": {
+                "battalion_name": "sling_guns",
                 "rank": 1,
                 "base_units": 5
             }
         }
     },
 
-    "abbrev": {
-        "horses": "H",
-        "elephants": "E",
-        "armoured_tanks": "AT",
-        "sling_guns": "SG"
-    },
-
-    "input_patterns": {
-        "standard_input": "(?P<army_name>[A-Z][a-z]+) attacks with (?P<horses>[0-9]+) H (?P<elephants>[0-9]+) E, (?P<armoured_tanks>[0-9]+) AT, (?P<sling_guns>[0-9]+) SG$"
+    "enemies": {
+        "falicornia": "lengaburu",
+        "lengaburu": "falicornia"
     }
 }
