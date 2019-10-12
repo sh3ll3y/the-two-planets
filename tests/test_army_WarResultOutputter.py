@@ -8,35 +8,30 @@ from io import StringIO
 from unittest.mock import patch
 
 test_army_data = OrderedDict([('army',
-                               OrderedDict([('enemy_army',
-                                             OrderedDict([('test_battalion_one',
-                                                           OrderedDict([('rank', 2),
+                               OrderedDict([('armyone',
+                                             OrderedDict([('TBI',
+                                                           OrderedDict([('battalion_name', 'test_battalion_one'),
+                                                                        ('rank', 2),
                                                                         ('base_units', 40)])),
-                                                          ('test_battalion_two',
-                                                           OrderedDict([('rank', 1),
+                                                          ('TBII',
+                                                           OrderedDict([('battalion_name', 'test_battalion_two'),
+                                                                        ('rank', 1),
                                                                         ('base_units', 20)]))])),
-                                            ('home_army',
-                                             OrderedDict([('test_battalion_one',
-                                                           OrderedDict([('rank', 2),
+                                            ('armytwo',
+                                             OrderedDict([('TBI',
+                                                           OrderedDict([('battalion_name', 'test_battalion_one'),
+                                                                        ('rank', 2),
                                                                         ('base_units', 10)])),
-                                                          ('test_battalion_two',
-                                                           OrderedDict([('rank', 1),
+                                                          ('TBII',
+                                                           OrderedDict([('battalion_name', 'test_battalion_two'),
+                                                                        ('rank', 1),
                                                                         ('base_units',
                                                                          5)]))]))])),
-                              ('abbrev',
-                               OrderedDict([('test_battalion_one', 'TB1'),
-                                            ('test_battalion_two', 'TB2')]))])
+                                                                                    ])
 
 
 class WarResultOutputterTest(unittest.TestCase):
     """Tests for WarResultOutputter class."""
-
-    def _set_up_test_army_and_prepares_battalions(self):
-        with patch.dict(army_data, test_army_data, clear=True):
-            counter_attack = OrderedDict(
-                [('test_battalion_one', 40), ('test_battalion_two', 16)])
-            self.test_army = Army('home_army')
-            self.test_army.prepare_battalions(counter_attack)
 
     def test_passing_army_that_does_not_interface_with_AbstractArmy_throws_exception(
             self):
@@ -55,12 +50,12 @@ class WarResultOutputterTest(unittest.TestCase):
     def test_print_standard_output_method_prints_in_the_expected_format(self):
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 40), ('test_battalion_two', 16)])
-            self.test_army = Army('home_army')
+                [('TBI', 40), ('TBII', 16)])
+            self.test_army = Army('armytwo')
             self.test_army.prepare_battalions(counter_attack)
             output = WarResultOutputter(self.test_army)
             with patch('sys.stdout', new=StringIO()) as fakeOutput:
                 output.print_standard_output()
                 self.assertEqual(
                     fakeOutput.getvalue().strip(),
-                    'Home_army deploys 10 TB1, 5 TB2 and loses')
+                    'Armytwo deploys 10 TBI, 5 TBII and loses')

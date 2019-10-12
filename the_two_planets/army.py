@@ -22,8 +22,8 @@ class RequiredUnitsNotIntegerError(BattalionError):
 class Battalion(object):
     """Class that represents a battalion."""
 
-    def __init__(self, army, battalion_initials, battalion_name, rank, base_units, required_units):
-        self.army = army
+    def __init__(self, army_name, battalion_initials, battalion_name, rank, base_units, required_units):
+        self.army_name = army_name
         self.battalion_initials = battalion_initials
         self.battalion_name = battalion_name
         self.rank = rank
@@ -163,7 +163,7 @@ class Army(AbstractArmy):
             for batln_name in self.counter_attack:
                 required_units = _utils.round_up(
                     counter_attack[batln_name], half_it=True)
-                batln = Battalion(army=self.army_name,
+                batln = Battalion(army_name=self.army_name,
                                   battalion_initials=batln_name,
                                   **army_data['army'][self.army_name][batln_name],
                                   required_units=required_units)
@@ -199,7 +199,6 @@ class WarResultOutputter(object):
         """Prints the output of war in standard format."""
         army_name, attack_units, result = self.army_obj.calibrate()
         output_pattern = self.__build_standard_output_pattern(len(attack_units))
-        # army_name = army_name.capitalize()
         inject = []
         for batln in attack_units:
             inject.append(attack_units[batln])

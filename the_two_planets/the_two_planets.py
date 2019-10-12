@@ -1,68 +1,21 @@
+import input_analyzer
 
-import json
-import re
-
-from army import Army, WarResultOutputter
 from army_config import army_data
-from collections import OrderedDict
-
-
-class ValidationError(Exception):
-    """Base class for exceptions in this module."""
-    pass
-
-
-class InputFormatError(ValidationError):
-    """Exception raised for errors in the input format."""
-    pass
-
-
-class InsufficientUnitsError(ValidationError):
-    """Exception raised if attack units is more than base units."""
-    pass
-
-
-def validate_input_format(input_str):
-    """Validates the format of the input received."""
-
-    input_pattern = (r'Falicornia attacks with (?P<H>[0-9]+) H, '
-                     r'(?P<E>[0-9]+) E, '
-                     r'(?P<AT>[0-9]+) AT, '
-                     r'(?P<SG>[0-9]+) SG$')
-
-    match_obj = re.match(input_pattern, input_str)
-    if not match_obj:
-        raise InputFormatError(input_str, "Error in input format.")
-    return match_obj
-
-
-def validate_fal_attack_units(attack_units):
-    """Validates the attack units of Falicornia army."""
-    fal_batlns = army_data['army']['falicornia']
-    for bat in fal_batlns:
-        if fal_batlns[bat]['base_units'] > attack_units[bat]:
-            continue
-        else:
-            raise InsufficientUnitsError(
-                attack_units, "One or more attack units more than base units.")
-    return attack_units
+from army import Army, WarResultOutputter
+from input_analyzer import InputAnalyzer
 
 
 def main(input_str):
-    match_obj = validate_input_format(input_str)
-    fal_attack = match_obj.groupdict()
-    print(fal_attack)
-    fal_attack_units = OrderedDict()
-    for order in army_data['army']['falicornia'].keys():
-        fal_attack_units[order] = int(fal_attack[order])
+    input_data = InputAnalyzer(input_str)
+    if input_data.validate_input_format():
+        enemy_army_name, enemy_battalions = input_data.analyzer.get_attack_details()
 
-    fal_attack_units = validate_fal_attack_units(
-        fal_attack_units)
-    print(fal_attack_units)
-    leng_army = Army('lengaburu')
-    leng_army.prepare_battalions(fal_attack_units)
-    output = WarResultOutputter(leng_army)
-    output.print_standard_output()
+    if input_analyzer.validate_attack_data(enemy_army_name, enemy_battalions):
+        home_army_name = army_data['enemies'][enemy_army_name]
+        home_army = Army(home_army_name)
+        home_army.prepare_battalions(enemy_battalions)
+        output = WarResultOutputter(home_army)
+        output.print_standard_output()
 
 
 if __name__ == '__main__':

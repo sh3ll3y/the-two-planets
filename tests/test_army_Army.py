@@ -7,19 +7,23 @@ from collections import OrderedDict
 from unittest.mock import patch
 
 test_army_data = OrderedDict([('army',
-                               OrderedDict([('enemy_army',
-                                             OrderedDict([('test_battalion_one',
-                                                           OrderedDict([('rank', 2),
+                               OrderedDict([('armyone',
+                                             OrderedDict([('TBI',
+                                                           OrderedDict([('battalion_name', 'test_battalion_one'),
+                                                                        ('rank', 2),
                                                                         ('base_units', 40)])),
-                                                          ('test_battalion_two',
-                                                           OrderedDict([('rank', 1),
+                                                          ('TBII',
+                                                           OrderedDict([('battalion_name', 'test_battalion_two'),
+                                                                        ('rank', 1),
                                                                         ('base_units', 20)]))])),
-                                            ('home_army',
-                                             OrderedDict([('test_battalion_one',
-                                                           OrderedDict([('rank', 2),
+                                            ('armytwo',
+                                             OrderedDict([('TBI',
+                                                           OrderedDict([('battalion_name', 'test_battalion_one'),
+                                                                        ('rank', 2),
                                                                         ('base_units', 10)])),
-                                                          ('test_battalion_two',
-                                                           OrderedDict([('rank', 1),
+                                                          ('TBII',
+                                                           OrderedDict([('battalion_name', 'test_battalion_two'),
+                                                                        ('rank', 1),
                                                                         ('base_units',
                                                                          5)]))]))]))])
 
@@ -28,7 +32,7 @@ class ArmyTest(unittest.TestCase):
     """Tests for the Army class."""
 
     def _set_up_test_Army(self):
-        self.army_name = 'home_army'
+        self.army_name = 'armytwo'
         self.test_army = Army(self.army_name)
 
     def test_army_class_initiation(self):
@@ -37,12 +41,12 @@ class ArmyTest(unittest.TestCase):
         self.assertEqual(self.test_army.battalions, [])
         self.assertIsNone(self.test_army.counter_attack)
 
-    def test_prepare_battalions_adds_same_number_of_battalions_to_home_army(
+    def test_prepare_battalions_adds_same_number_of_battalions_to_armytwo(
             self):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 20), ('test_battalion_two', 10)])
+                [('TBI', 20), ('TBII', 10)])
             self.test_army.prepare_battalions(counter_attack)
             self.assertEqual(len(self.test_army.battalions), 2)
 
@@ -51,7 +55,7 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('invalid_battalion', 20), ('test_battalion_two', 10)])
+                [('invalid_battalion', 20), ('TBII', 10)])
             with self.assertRaises(army.InvalidCounterBattalionsError):
                 self.test_army.prepare_battalions(counter_attack)
 
@@ -60,7 +64,7 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_two', 10), ('test_battalion_one', 20)])
+                [('TBII', 10), ('TBI', 20)])
             with self.assertRaises(army.InvalidCounterBattalionsError):
                 self.test_army.prepare_battalions(counter_attack)
 
@@ -69,7 +73,7 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 20), ('test_battalion_two', 10)])
+                [('TBI', 20), ('TBII', 10)])
             self.test_army.prepare_battalions(counter_attack)
             # Required units of home battalions are half of the counter
             # battalions.
@@ -81,7 +85,7 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 22), ('test_battalion_two', 10)])
+                [('TBI', 22), ('TBII', 10)])
             LOWER_CONVERSION = 0.5
             HIGHER_CONVERSION = 2
             self.test_army.prepare_battalions(counter_attack)
@@ -103,7 +107,7 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 20), ('test_battalion_two', 16)])
+                [('TBI', 20), ('TBII', 16)])
             LOWER_CONVERSION = 0.5
             HIGHER_CONVERSION = 2
             self.test_army.prepare_battalions(counter_attack)
@@ -125,7 +129,7 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 20), ('test_battalion_two', 16)])
+                [('TBI', 20), ('TBII', 16)])
             self.test_army.prepare_battalions(counter_attack)
             # required units of this is 10 which is equal to base units.
             test_batln = self.test_army.battalions[0]
@@ -136,7 +140,7 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 40), ('test_battalion_two', 16)])
+                [('TBI', 40), ('TBII', 16)])
             self.test_army.prepare_battalions(counter_attack)
             # required units of this is 20 which is more than base units.
             test_batln = self.test_army.battalions[0]
@@ -146,11 +150,11 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 40), ('test_battalion_two', 16)])
+                [('TBI', 40), ('TBII', 16)])
             self.test_army.prepare_battalions(counter_attack)
-            expected_army_name = 'home_army'
+            expected_army_name = 'armytwo'
             expected_attack_units = OrderedDict(
-                [('test_battalion_one', 10), ('test_battalion_two', 5)])
+                [('TBI', 10), ('TBII', 5)])
             expected_result = False
             army_name, attack_units, result = self.test_army.calibrate()
             self.assertEqual(army_name, expected_army_name)
@@ -161,11 +165,11 @@ class ArmyTest(unittest.TestCase):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('test_battalion_one', 22), ('test_battalion_two', 2)])
+                [('TBI', 22), ('TBII', 2)])
             self.test_army.prepare_battalions(counter_attack)
-            expected_army_name = 'home_army'
+            expected_army_name = 'armytwo'
             expected_attack_units = OrderedDict(
-                [('test_battalion_one', 10), ('test_battalion_two', 2)])
+                [('TBI', 10), ('TBII', 2)])
             expected_result = True
             army_name, attack_units, result = self.test_army.calibrate()
             self.assertEqual(army_name, expected_army_name)
