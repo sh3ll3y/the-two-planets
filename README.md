@@ -15,10 +15,10 @@ __________________________
 How to run the test cases:  
 	cd into the parent folder of this project (i.e, 'the-the-two-planets') and run the below command.   
 		python3.7 -B -m unittest discover -s tests -t .    
-	To check test coverage, run the below commands (needs coverage to be installed):
+	To check test coverage, run the below commands (needs 'coverage' to be installed):
 	    coverage run the_two_planets.py
 		coverage report -m
-	Current test coverage is 91%
+	Current test coverage is 93%
 __________________________  
 
 How to run the program:  

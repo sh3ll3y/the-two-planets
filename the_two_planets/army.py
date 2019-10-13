@@ -1,4 +1,4 @@
-"""Module that holds army and battalion classes."""
+"""Module that holds army, battalion and output classes."""
 
 import json
 import utils as _utils
@@ -22,7 +22,14 @@ class RequiredUnitsNotIntegerError(BattalionError):
 class Battalion(object):
     """Class that represents a battalion."""
 
-    def __init__(self, army_name, battalion_initials, battalion_name, rank, base_units, required_units):
+    def __init__(
+            self,
+            army_name,
+            battalion_initials,
+            battalion_name,
+            rank,
+            base_units,
+            required_units):
         self.army_name = army_name
         self.battalion_initials = battalion_initials
         self.battalion_name = battalion_name
@@ -59,6 +66,7 @@ class Battalion(object):
 
 class AbstractArmy(ABC):
     """Defines adbstract methods for Army class."""
+
     @abstractmethod
     def __init__(self, army_name):
         self.army = army
@@ -79,8 +87,8 @@ class ArmyError(Exception):
     pass
 
 
-class InvalidCounterBattalionsError(ArmyError):
-    """Exception raised if counter attack battalions are not in order or invalid."""
+class BattalionsMismatchError(ArmyError):
+    """Exception raised if there is a mismatch between the battlalions of two armies."""
     pass
 
 
@@ -99,8 +107,8 @@ class Army(AbstractArmy):
         if counter_batlns.keys() == home_batlns.keys() and all(
                 map(eq, home_batlns, counter_batlns)):
             return True
-        raise InvalidCounterBattalionsError(
-            counter_attack, 'Counter attack battalions are not in order or invalid')
+        raise BattalionsMismatchError(
+            counter_attack, 'Mismatch between battalions of two armies.')
 
     @staticmethod
     def _calibrate_adj_bat(batln_x, batln_y, factor, reverse_factor):
@@ -198,7 +206,8 @@ class WarResultOutputter(object):
     def print_standard_output(self):
         """Prints the output of war in standard format."""
         army_name, attack_units, result = self.army_obj.calibrate()
-        output_pattern = self.__build_standard_output_pattern(len(attack_units))
+        output_pattern = self.__build_standard_output_pattern(
+            len(attack_units))
         inject = []
         for batln in attack_units:
             inject.append(attack_units[batln])

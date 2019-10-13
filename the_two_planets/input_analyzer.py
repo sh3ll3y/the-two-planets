@@ -2,10 +2,12 @@ import re
 
 from army_config import army_data
 from collections import OrderedDict
-
+from operator import eq
 
 class StandardInput(object):
-    """Class that represents the pattern and details of the standard input format. Supports any number of battalions including new additions."""
+    """Class that represents the pattern and details of the standard input format.
+    Supports any number of battalions in this pattern including new additions."""
+
     pattern = r'(?P<army_name>[A-Z][a-z]+)( attacks with )((?:[0-9]+ [A-Z]+, )+)?([0-9]+ [A-Z]+)$'
 
     def __init__(self, input_str, match_obj):
@@ -27,7 +29,7 @@ class StandardInput(object):
         return input_army_name.lower(), batln_units
 
 
-class_map = {'standard_input': StandardInput,}
+class_map = {'standard_input': StandardInput, }
 
 
 class InputAnalyzerError(Exception):
@@ -36,11 +38,13 @@ class InputAnalyzerError(Exception):
 
 
 class InputFormatError(InputAnalyzerError):
-    """Exception raised when input is not in the list of accepted input format."""
+    """Exception raised when input is not in the list of accepted input formats."""
     pass
 
 
 class InputAnalyzer(object):
+    """Helps to match the input with their respective clases for processing."""
+
     def __init__(self, input_str):
         self.input_str = input_str
         self.analyzer = None
@@ -49,7 +53,8 @@ class InputAnalyzer(object):
         for class_name in class_map:
             match_obj = re.match(class_map[class_name].pattern, self.input_str)
             if match_obj:
-                self.analyzer = class_map[class_name](self.input_str, match_obj)
+                self.analyzer = class_map[class_name](
+                    self.input_str, match_obj)
                 return True
         raise InputFormatError(self.input_str, "Invalid input format.")
 
@@ -71,14 +76,18 @@ class InsufficientUnitsError(ValidateAttackData):
 
 
 def validate_attack_data(army_name, attack_units):
-    """Validates the attack units of an army."""
+    """Takes the army_name as string and attack_units as OrderedDict."""
+
     accepted_armies = army_data['army'].keys()
     if army_name not in accepted_armies:
         raise InvalidArmyError(army_name, "This is an invalid army.")
     accepted_batlns = army_data['army'][army_name].keys()
+    attack_batlns = attack_units.keys()
+    if not (accepted_batlns == attack_batlns and all(
+            map(eq, accepted_batlns, attack_batlns))):
+        raise InvalidBattalionError(attack_units, "Attack units invalid or not in order.")
     for batln in attack_units:
-        if batln not in accepted_batlns:
-            raise InvalidBattalionError(batln, "This is an invalid battalion.")
         if army_data['army'][army_name][batln]['base_units'] < attack_units[batln]:
-            raise InsufficientUnitsError(batln, "Battalion attack units more than base units.")
+            raise InsufficientUnitsError(
+                batln, "Battalion attack units more than base units.")
     return True

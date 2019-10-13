@@ -1,3 +1,5 @@
+"The Two Planets command line app."
+
 import input_analyzer
 
 from army_config import army_data

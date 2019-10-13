@@ -50,22 +50,22 @@ class ArmyTest(unittest.TestCase):
             self.test_army.prepare_battalions(counter_attack)
             self.assertEqual(len(self.test_army.battalions), 2)
 
-    def test_prepare_battalions_with_invalid_counter_battalions_raises_exception(
+    def test_prepare_battalions_when_counter_army_battalion_does_not_exist_in_home_army_raises_exception(
             self):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
-                [('invalid_battalion', 20), ('TBII', 10)])
-            with self.assertRaises(army.InvalidCounterBattalionsError):
+                [('new_battalion', 20), ('TBII', 10)])
+            with self.assertRaises(army.BattalionsMismatchError):
                 self.test_army.prepare_battalions(counter_attack)
 
-    def test_prepare_battalions_with_valid_counter_battalions_but_invalid_order_raises_exception(
+    def test_prepare_battalions_when_mismatch_of_battalions_between_two_armies_raises_exception(
             self):
         self._set_up_test_Army()
         with patch.dict(army_data, test_army_data, clear=True):
             counter_attack = OrderedDict(
                 [('TBII', 10), ('TBI', 20)])
-            with self.assertRaises(army.InvalidCounterBattalionsError):
+            with self.assertRaises(army.BattalionsMismatchError):
                 self.test_army.prepare_battalions(counter_attack)
 
     def test_prepare_battalions_prepares_home_battalions_using_power_rule(
