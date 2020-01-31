@@ -1,86 +1,12 @@
-"""Module that holds army, battalion and output classes."""
+"""Module that holds the Army class."""
 
 import json
 import utils as _utils
 
 from army_config import army_data
-from abc import ABC, abstractmethod
+from battalion import Battalion
 from collections import OrderedDict
 from operator import eq
-
-
-class BattalionError(Exception):
-    """Base class for Battalion exceptions."""
-    pass
-
-
-class RequiredUnitsNotIntegerError(BattalionError):
-    """Exception raised if battalion units is not an integer."""
-    pass
-
-
-class Battalion(object):
-    """Class that represents a battalion."""
-
-    def __init__(
-            self,
-            army_name,
-            battalion_initials,
-            battalion_name,
-            rank,
-            base_units,
-            required_units):
-        self.army_name = army_name
-        self.battalion_initials = battalion_initials
-        self.battalion_name = battalion_name
-        self.rank = rank
-        self.base_units = base_units
-        self.required_units = required_units
-
-    def is_deficient(self):
-        return self.required_units > self.base_units
-
-    def get_deficient_units(self):
-        if self.is_deficient():
-            return self.required_units - self.base_units
-        return 0
-
-    def add_to_required_units(self, units):
-        if not isinstance(units, int):
-            raise RequiredUnitsNotIntegerError(
-                units, 'Required units to add should be an integer.')
-        self.required_units += units
-
-    def update_required_units(self, units):
-        if not isinstance(units, int):
-            raise RequiredUnitsNotIntegerError(
-                units, 'Required units to update should be an integer.')
-        self.required_units = units
-
-    def remove_from_required_units(self, units):
-        if not isinstance(units, int):
-            raise RequiredUnitsNotIntegerError(
-                units, 'Units to remove should be an integer.')
-        self.required_units -= units
-
-
-class AbstractArmy(ABC):
-    """Defines adbstract methods for Army class."""
-
-    @abstractmethod
-    def __init__(self, army_name):
-        self.army = army
-        self.battalions = []
-        self.counter_atack = None
-
-    @abstractmethod
-    def prepare_battalions(self):
-        pass
-
-    @abstractmethod
-    def calibrate(self):
-        pass
-
 
 class ArmyError(Exception):
     """Base class for army exceptions."""
@@ -92,7 +18,7 @@ class BattalionsMismatchError(ArmyError):
     pass
 
 
-class Army(AbstractArmy):
+class Army(object):
     """The army class."""
 
     def __init__(self, army_name):
@@ -176,41 +102,3 @@ class Army(AbstractArmy):
                                   **army_data['army'][self.army_name][batln_name],
                                   required_units=required_units)
                 self.battalions.append(batln)
-
-
-class WarResultOutputterException(Exception):
-    """Exception raised if army does not comply with AbstractArmy."""
-    pass
-
-
-class InvalidArmyError(WarResultOutputterException):
-    """Exception raised if army does not comply with AbstractArmy."""
-    pass
-
-
-class WarResultOutputter(object):
-    """Outputs the result of the war."""
-
-    def __init__(self, army_object):
-        if not isinstance(army_object, AbstractArmy):
-            raise InvalidArmyError(army_object, "This is an invalid army.")
-        self.army_obj = army_object
-
-    def __build_standard_output_pattern(self, batlns_len):
-        prefix = '{} deploys '
-        mid = '{} {}, ' * batlns_len
-        mid = mid[:-2]
-        suffix = ' and {}'
-        return prefix + mid + suffix
-
-    def print_standard_output(self):
-        """Prints the output of war in standard format."""
-        army_name, attack_units, result = self.army_obj.calibrate()
-        output_pattern = self.__build_standard_output_pattern(
-            len(attack_units))
-        inject = []
-        for batln in attack_units:
-            inject.append(attack_units[batln])
-            inject.append(batln)
-        outcome = 'wins' if result else 'loses'
-        print(output_pattern.format(army_name.capitalize(), *inject, outcome))
